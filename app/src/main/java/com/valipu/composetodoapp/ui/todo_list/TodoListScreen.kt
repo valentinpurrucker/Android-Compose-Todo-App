@@ -25,17 +25,17 @@ fun TodoListScreen(todoViewModel: TodoListViewModel = hiltViewModel(), onNavigat
     LaunchedEffect(key1 = todos.value.messages) {
         when (val msg = todos.value.messages.firstOrNull()) {
             is UiEvent.Snackbar -> {
-                todoViewModel.consumeUiEvent(msg.id)
                 val result = scaffoldState.snackbarHostState.showSnackbar(msg.msg, msg.action)
                 if (result == SnackbarResult.ActionPerformed) {
                     // do undo operation
                     todoViewModel.undoDelete()
                 }
+                todoViewModel.consumeUiEvent(msg.id)
             }
             is UiEvent.Navigate -> {
                 // Navigate to route
-                todoViewModel.consumeUiEvent(msg.id)
                 onNavigate(msg.route)
+                todoViewModel.consumeUiEvent(msg.id)
             }
             else -> {}
         }
@@ -44,12 +44,16 @@ fun TodoListScreen(todoViewModel: TodoListViewModel = hiltViewModel(), onNavigat
     floatingActionButton = {FloatingActionButton(onClick = { todoViewModel.navigateTodoAdd()}) {
         Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
     }}) {
-        LazyColumn {
-            items(todos.value.todos) { todo ->
-                TodoItem(todo = todo,
-                    onDoneClicked = {todoViewModel.doneTodo(todo, !it.done)},
-                    onDeleteClicked = { todoViewModel.deleteTodo(todo)},
-                    onEditClicked = { todoViewModel.navigateTodoEdit(todo)})
+        if (todos.value.isTodoListEmpty) {
+            Text(text = ScreenStrings.LIST_EMPTY)
+        } else {
+            LazyColumn {
+                items(todos.value.todos) { todo ->
+                    TodoItem(todo = todo,
+                        onDoneClicked = {todoViewModel.doneTodo(todo, !it.done)},
+                        onDeleteClicked = { todoViewModel.deleteTodo(todo)},
+                        onEditClicked = { todoViewModel.navigateTodoEdit(todo)})
+                }
             }
         }
     }

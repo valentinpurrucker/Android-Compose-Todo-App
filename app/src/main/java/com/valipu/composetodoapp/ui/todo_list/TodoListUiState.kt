@@ -6,7 +6,8 @@ import java.util.*
 data class TodoListUiState(
     val todos: List<Todo> = emptyList(),
     val messages: List<UiEvent> = emptyList(),
-    val isTodoDetailView: Boolean = false
+    val isTodoDetailView: Boolean = false,
+    val isTodoListEmpty: Boolean = false
 )
 
 
@@ -27,4 +28,8 @@ object SnackbarMessages {
     const val DELETE = "Todo deleted"
     const val SAVED = "Todo saved"
     const val TITLE_BLANK = "Title must not be empty"
+}
+
+object ScreenStrings {
+    const val LIST_EMPTY = "No todos yet"
 }

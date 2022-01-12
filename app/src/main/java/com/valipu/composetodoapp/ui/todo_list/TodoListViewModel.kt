@@ -22,7 +22,7 @@ class TodoListViewModel @Inject constructor(private val todoRepository: TodoRepo
     fun fetchAllTodos() {
         viewModelScope.launch(Dispatchers.IO) {
             todoRepository.getAllTodos().collect {
-                todoListUiState.value = todoListUiState.value.copy(todos = it)
+                todoListUiState.value = todoListUiState.value.copy(todos = it, isTodoListEmpty = it.isEmpty())
             }
         }
     }

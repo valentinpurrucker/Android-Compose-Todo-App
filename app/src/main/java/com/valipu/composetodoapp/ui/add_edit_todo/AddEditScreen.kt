@@ -23,26 +23,30 @@ fun AddEditScreen(addEditTodoViewModel: AddEditTodoViewModel = hiltViewModel(), 
     LaunchedEffect(key1 = state.value.messages) {
         when(val msg = state.value.messages.firstOrNull()) {
             is UiEvent.PopBackStack -> {
-                addEditTodoViewModel.consumeUiEvent(msg.id)
                 onPopBackStack()
+                addEditTodoViewModel.consumeUiEvent(msg.id)
             }
             is UiEvent.Snackbar -> {
-                scaffoldState.snackbarHostState.showSnackbar(msg.msg)
                 addEditTodoViewModel.consumeUiEvent(msg.id)
             }
             else -> {}
         }
     }
     Scaffold(scaffoldState = scaffoldState, modifier = Modifier
-        .fillMaxSize()
-        .padding(8.dp),
+        .fillMaxSize(),
     floatingActionButton = { FloatingActionButton(onClick = { addEditTodoViewModel.saveTodo() }) {
         Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
     }}) {
     Column(modifier = Modifier
         .fillMaxSize()) {
-        TextField(value = addEditTodoViewModel.todoUiState.value.title, onValueChange = {title -> addEditTodoViewModel.setTitle(title)})
-        TextField(value = addEditTodoViewModel.todoUiState.value.description ?: "", onValueChange = {description -> addEditTodoViewModel.setDescription(description)})
+        TextField(value = addEditTodoViewModel.todoUiState.value.title, onValueChange = {title -> addEditTodoViewModel.setTitle(title)},
+        placeholder = {
+            Text(text = "Title")
+        })
+        TextField(value = addEditTodoViewModel.todoUiState.value.description ?: "", onValueChange = {description -> addEditTodoViewModel.setDescription(description)},
+            placeholder = {
+                Text(text = "Description (optional)")
+            })
     }
     }
 }
